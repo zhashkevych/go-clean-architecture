@@ -8,12 +8,6 @@ import (
 func RegisterHTTPEndpoints(router *gin.RouterGroup, uc bookmark.UseCase) {
 	h := NewHandler(uc)
 
-	noauth := router.Group("/")
-	{
-		noauth.POST("/sign-up", h.SignUp)
-		noauth.POST("/sign-in", h.SignIn)
-	}
-
 	bookmarks := router.Group("/bookmarks")
 	{
 		bookmarks.POST("", h.Create)

@@ -52,7 +52,7 @@ func (a *AuthUseCase) SignIn(ctx context.Context, username, password string) (st
 
 	user, err := a.userRepo.GetUser(ctx, username, password)
 	if err != nil {
-		return "", err
+		return "", auth.ErrUserNotFound
 	}
 
 	claims := AuthClaims{

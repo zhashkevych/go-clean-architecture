@@ -20,24 +20,24 @@ func NewAuthMiddleware(usecase auth.UseCase) gin.HandlerFunc {
 func (m *AuthMiddleware) Handle(c *gin.Context) {
 	authHeader := c.GetHeader("Authorization")
 	if authHeader == "" {
-		c.AbortWithStatus(http.StatusForbidden)
+		c.AbortWithStatus(http.StatusUnauthorized)
 		return
 	}
 
 	headerParts := strings.Split(authHeader, " ")
 	if len(headerParts) != 2 {
-		c.AbortWithStatus(http.StatusForbidden)
+		c.AbortWithStatus(http.StatusUnauthorized)
 		return
 	}
 
 	if headerParts[0] != "Bearer" {
-		c.AbortWithStatus(http.StatusForbidden)
+		c.AbortWithStatus(http.StatusUnauthorized)
 		return
 	}
 
 	user, err := m.usecase.ParseToken(c.Request.Context(), headerParts[1])
 	if err != nil {
-		c.AbortWithStatus(http.StatusForbidden)
+		c.AbortWithStatus(http.StatusUnauthorized)
 		return
 	}
 
