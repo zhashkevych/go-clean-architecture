@@ -1,6 +1,9 @@
 package auth
 
+import "github.com/google/uuid"
+
 type User struct {
-	ID       int64
+	ID       uuid.UUID
 	Username string
+	Password string
 }

@@ -2,6 +2,7 @@ package localcache
 
 import (
 	"context"
+	"github.com/google/uuid"
 	"github.com/stretchr/testify/assert"
 	"github.com/zhashkevych/go-clean-architecture/auth"
 	"github.com/zhashkevych/go-clean-architecture/bookmark"
@@ -9,13 +10,14 @@ import (
 )
 
 func TestGetBookmarks(t *testing.T) {
-	user := &auth.User{ID: 1}
+	id := uuid.New()
+	user := &auth.User{ID: id}
 
 	s := NewBookmarkLocalStorage()
 
 	for i := 0; i < 10; i++ {
 		bm := &bookmark.Bookmark{
-			ID:     int64(i),
+			ID:     id,
 			UserID: user.ID,
 		}
 
@@ -30,49 +32,59 @@ func TestGetBookmarks(t *testing.T) {
 }
 
 func TestGetBookmarkByID(t *testing.T) {
-	user := &auth.User{ID: 1}
-	user2 := &auth.User{ID: 2}
-	bm := &bookmark.Bookmark{ID: 15, UserID: user.ID}
+	id1 := uuid.New()
+	id2 := uuid.New()
+
+	user1 := &auth.User{ID: id1}
+	user2 := &auth.User{ID: id2}
+
+	bmID := uuid.New()
+	bm := &bookmark.Bookmark{ID: bmID, UserID: user1.ID}
 
 	s := NewBookmarkLocalStorage()
 
-	err := s.CreateBookmark(context.Background(), user, bm)
+	err := s.CreateBookmark(context.Background(), user1, bm)
 	assert.NoError(t, err)
 
-	returnedTodo, err := s.GetBookmarkByID(context.Background(), user, int64(15))
+	returnedTodo, err := s.GetBookmarkByID(context.Background(), user1, bmID)
 	assert.NoError(t, err)
 	assert.Equal(t, bm, returnedTodo)
 
-	returnedTodo, err = s.GetBookmarkByID(context.Background(), user, int64(0))
+	returnedTodo, err = s.GetBookmarkByID(context.Background(), user1, uuid.New())
 	assert.Error(t, err)
 	assert.Equal(t, err, bookmark.ErrBookmarkNotFound)
 
-	returnedTodo, err = s.GetBookmarkByID(context.Background(), user2, int64(15))
+	returnedTodo, err = s.GetBookmarkByID(context.Background(), user2, bmID)
 	assert.Error(t, err)
 	assert.Equal(t, err, bookmark.ErrBookmarkNotFound)
 }
 
 func TestDeleteBookmark(t *testing.T) {
-	user := &auth.User{ID: 1}
-	user2 := &auth.User{ID: 2}
-	bm := &bookmark.Bookmark{ID: 15, UserID: user.ID}
+	id1 := uuid.New()
+	id2 := uuid.New()
+
+	user1 := &auth.User{ID: id1}
+	user2 := &auth.User{ID: id2}
+
+	bmID := uuid.New()
+	bm := &bookmark.Bookmark{ID: bmID, UserID: user1.ID}
 
 	s := NewBookmarkLocalStorage()
 
-	err := s.CreateBookmark(context.Background(), user, bm)
+	err := s.CreateBookmark(context.Background(), user1, bm)
 	assert.NoError(t, err)
 
-	err = s.DeleteBookmark(context.Background(), user, int64(15))
+	err = s.DeleteBookmark(context.Background(), user1, bmID)
 	assert.NoError(t, err)
 
-	_, err = s.GetBookmarkByID(context.Background(), user, bm.ID)
+	_, err = s.GetBookmarkByID(context.Background(), user1, bm.ID)
 	assert.Error(t, err)
 	assert.Equal(t, err, bookmark.ErrBookmarkNotFound)
 
-	err = s.CreateBookmark(context.Background(), user, bm)
+	err = s.CreateBookmark(context.Background(), user1, bm)
 	assert.NoError(t, err)
 
-	err = s.DeleteBookmark(context.Background(), user2, int64(15))
+	err = s.DeleteBookmark(context.Background(), user2, bmID)
 	assert.Error(t, err)
 	assert.Equal(t, err, bookmark.ErrBookmarkNotFound)
 }

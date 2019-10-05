@@ -2,6 +2,7 @@ package usecase
 
 import (
 	"context"
+	"github.com/google/uuid"
 	"github.com/zhashkevych/go-clean-architecture/auth"
 	"github.com/zhashkevych/go-clean-architecture/bookmark"
 )
@@ -24,10 +25,10 @@ func (b BookmarkUseCase) GetBookmarks(ctx context.Context, user *auth.User) ([]*
 	return b.bookmarkRepo.GetBookmarks(ctx, user)
 }
 
-func (b BookmarkUseCase) GetBookmarkByID(ctx context.Context, user *auth.User, id int64) (*bookmark.Bookmark, error) {
+func (b BookmarkUseCase) GetBookmarkByID(ctx context.Context, user *auth.User, id uuid.UUID) (*bookmark.Bookmark, error) {
 	return b.GetBookmarkByID(ctx, user, id)
 }
 
-func (b BookmarkUseCase) DeleteBookmark(ctx context.Context, user *auth.User, id int64) error {
+func (b BookmarkUseCase) DeleteBookmark(ctx context.Context, user *auth.User, id uuid.UUID) error {
 	return b.bookmarkRepo.DeleteBookmark(ctx, user, id)
 }

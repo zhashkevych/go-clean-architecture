@@ -2,7 +2,9 @@ package mock
 
 import (
 	"context"
+	"github.com/google/uuid"
 	"github.com/stretchr/testify/mock"
+	"github.com/zhashkevych/go-clean-architecture/auth"
 	"github.com/zhashkevych/go-clean-architecture/bookmark"
 )
 
@@ -10,32 +12,26 @@ type BookmarkStorageMock struct {
 	mock.Mock
 }
 
-func (s *BookmarkStorageMock) CreateBookmark(ctx context.Context, todo *bookmark.Bookmark) error {
-	args := s.Called(todo)
+func (s *BookmarkStorageMock) CreateBookmark(ctx context.Context, user *auth.User, bm *bookmark.Bookmark) error {
+	args := s.Called(user, bm)
 
 	return args.Error(0)
 }
 
-func (s *BookmarkStorageMock) UpdateBookmark(ctx context.Context, id int64, todo *bookmark.Bookmark) error {
-	args := s.Called(todo)
-
-	return args.Error(0)
-}
-
-func (s *BookmarkStorageMock) GetBookmarksByUserID(ctx context.Context, userID int64) ([]*bookmark.Bookmark, error) {
-	args := s.Called(userID)
+func (s *BookmarkStorageMock) GetBookmarks(ctx context.Context, user *auth.User) ([]*bookmark.Bookmark, error) {
+	args := s.Called(user)
 
 	return args.Get(0).([]*bookmark.Bookmark), args.Error(1)
 }
 
-func (s *BookmarkStorageMock) GetBookmarkByID(ctx context.Context, id int64) (*bookmark.Bookmark, error) {
-	args := s.Called(id)
+func (s *BookmarkStorageMock) GetBookmarkByID(ctx context.Context, user *auth.User, id uuid.UUID) (*bookmark.Bookmark, error) {
+	args := s.Called(user, id)
 
 	return args.Get(0).(*bookmark.Bookmark), args.Error(1)
 }
 
-func (s *BookmarkStorageMock) DeleteBookmark(ctx context.Context, id int64) error {
-	args := s.Called(id)
+func (s *BookmarkStorageMock) DeleteBookmark(ctx context.Context, user *auth.User, id uuid.UUID) error {
+	args := s.Called(user, id)
 
 	return args.Error(0)
 }

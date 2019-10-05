@@ -1,8 +1,10 @@
 package bookmark
 
+import "github.com/google/uuid"
+
 type Bookmark struct {
-	ID          int64
-	UserID      int64
+	ID          uuid.UUID
+	UserID      uuid.UUID
 	URL 		string
 	Title       string
 	Description string

@@ -2,6 +2,7 @@ package localcache
 
 import (
 	"context"
+	"github.com/google/uuid"
 	"sync"
 
 	"github.com/zhashkevych/go-clean-architecture/auth"
@@ -9,13 +10,13 @@ import (
 )
 
 type BookmarkLocalStorage struct {
-	bookmarks map[int64]*bookmark.Bookmark
+	bookmarks map[uuid.UUID]*bookmark.Bookmark
 	mutex     *sync.Mutex
 }
 
 func NewBookmarkLocalStorage() *BookmarkLocalStorage {
 	return &BookmarkLocalStorage{
-		bookmarks: make(map[int64]*bookmark.Bookmark),
+		bookmarks: make(map[uuid.UUID]*bookmark.Bookmark),
 		mutex:     new(sync.Mutex),
 	}
 }
@@ -44,7 +45,7 @@ func (s *BookmarkLocalStorage) GetBookmarks(ctx context.Context, user *auth.User
 	return bookmarks, nil
 }
 
-func (s *BookmarkLocalStorage) GetBookmarkByID(ctx context.Context, user *auth.User, id int64) (*bookmark.Bookmark, error) {
+func (s *BookmarkLocalStorage) GetBookmarkByID(ctx context.Context, user *auth.User, id uuid.UUID) (*bookmark.Bookmark, error) {
 	s.mutex.Lock()
 	defer s.mutex.Unlock()
 
@@ -56,7 +57,7 @@ func (s *BookmarkLocalStorage) GetBookmarkByID(ctx context.Context, user *auth.U
 	return nil, bookmark.ErrBookmarkNotFound
 }
 
-func (s *BookmarkLocalStorage) DeleteBookmark(ctx context.Context, user *auth.User, id int64) error {
+func (s *BookmarkLocalStorage) DeleteBookmark(ctx context.Context, user *auth.User, id uuid.UUID) error {
 	s.mutex.Lock()
 	defer s.mutex.Unlock()
 
