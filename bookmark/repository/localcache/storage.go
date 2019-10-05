@@ -2,24 +2,24 @@ package localcache
 
 import (
 	"context"
-	"github.com/zhashkevych/go-clean-architecture/todo"
+	"github.com/zhashkevych/go-clean-architecture/bookmark"
 	"sync"
 
-	"github.com/zhashkevych/go-clean-architecture/todo/model"
+	"github.com/zhashkevych/go-clean-architecture/bookmark/model"
 )
 
 type LocalStorage struct {
 	users map[int64]*model.User
 	um    *sync.Mutex
 
-	todos map[int64]*model.Todo
+	todos map[int64]*model.Bookmark
 	tm    *sync.Mutex
 }
 
 func NewLocalStorage() *LocalStorage {
 	return &LocalStorage{
 		users: make(map[int64]*model.User),
-		todos: make(map[int64]*model.Todo),
+		todos: make(map[int64]*model.Bookmark),
 		um:    new(sync.Mutex),
 		tm:    new(sync.Mutex),
 	}
@@ -40,10 +40,10 @@ func (s *LocalStorage) GetUser(ctx context.Context, id int64) (*model.User, erro
 		return user, nil
 	}
 
-	return nil, todo.ErrUserNotFound
+	return nil, bookmark.ErrUserNotFound
 }
 
-func (s *LocalStorage) CreateTodo(ctx context.Context, todo *model.Todo) error {
+func (s *LocalStorage) CreateTodo(ctx context.Context, todo *model.Bookmark) error {
 	s.tm.Lock()
 	s.todos[todo.ID] = todo
 	s.tm.Unlock()
@@ -51,8 +51,16 @@ func (s *LocalStorage) CreateTodo(ctx context.Context, todo *model.Todo) error {
 	return nil
 }
 
-func (s *LocalStorage) GetTodosByUserID(ctx context.Context, userID int64) ([]*model.Todo, error) {
-	todos := make([]*model.Todo, 0)
+func (s *LocalStorage) UpdateTodo(ctx context.Context, id int64, todo *model.Bookmark) error {
+	s.tm.Lock()
+	s.todos[id] = todo
+	s.tm.Unlock()
+
+	return nil
+}
+
+func (s *LocalStorage) GetTodosByUserID(ctx context.Context, userID int64) ([]*model.Bookmark, error) {
+	todos := make([]*model.Bookmark, 0)
 
 	s.tm.Lock()
 	for _, todo := range s.todos {
@@ -65,14 +73,14 @@ func (s *LocalStorage) GetTodosByUserID(ctx context.Context, userID int64) ([]*m
 	return todos, nil
 }
 
-func (s *LocalStorage) GetTodoByID(ctx context.Context, id int64) (*model.Todo, error) {
+func (s *LocalStorage) GetTodoByID(ctx context.Context, id int64) (*model.Bookmark, error) {
 	s.tm.Lock()
 	defer s.tm.Unlock()
 	if todo, ex := s.todos[id]; ex {
 		return todo, nil
 	}
 
-	return nil, todo.ErrTodoNotFound
+	return nil, bookmark.ErrTodoNotFound
 }
 
 func (s *LocalStorage) DeleteTodo(ctx context.Context, id int64) error {

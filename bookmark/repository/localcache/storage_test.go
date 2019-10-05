@@ -3,7 +3,7 @@ package localcache
 import (
 	"context"
 	"github.com/stretchr/testify/assert"
-	"github.com/zhashkevych/go-clean-architecture/todo/model"
+	"github.com/zhashkevych/go-clean-architecture/bookmark/model"
 	"testing"
 )
 
@@ -26,12 +26,12 @@ func TestGetUser(t *testing.T) {
 
 func TestGetTodosByUserID(t *testing.T) {
 	userID := int64(10)
-	userTodos := make([]*model.Todo, 0)
+	userTodos := make([]*model.Bookmark, 0)
 
 	s := NewLocalStorage()
 
 	for i := 0; i <= 10; i++ {
-		todo := &model.Todo{
+		todo := &model.Bookmark{
 			ID: int64(i),
 			UserID: func(i int) int64 {
 				if i%2 == 0 {
@@ -57,7 +57,7 @@ func TestGetTodosByUserID(t *testing.T) {
 }
 
 func TestGetTodoByID(t *testing.T) {
-	todo := &model.Todo{ID: 15}
+	todo := &model.Bookmark{ID: 15}
 
 	s := NewLocalStorage()
 

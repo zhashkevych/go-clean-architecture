@@ -1,11 +1,9 @@
 package model
 
-import "time"
-
-type Todo struct {
+type Bookmark struct {
 	ID          int64
 	UserID      int64
+	URL 		string
 	Title       string
 	Description string
-	DueDate     time.Time
 }
