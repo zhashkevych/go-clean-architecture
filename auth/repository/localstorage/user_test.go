@@ -1,17 +1,17 @@
-package localcache
+package localstorage
 
 import (
 	"context"
 	"github.com/stretchr/testify/assert"
+	"github.com/zhashkevych/go-clean-architecture/auth"
 	"github.com/zhashkevych/go-clean-architecture/bookmark"
-	"github.com/zhashkevych/go-clean-architecture/bookmark/model"
 	"testing"
 )
 
 func TestGetUser(t *testing.T) {
 	s := NewUserLocalStorage()
 
-	user := &model.User{
+	user := &auth.User{
 		ID:       0,
 		Username: "user",
 	}

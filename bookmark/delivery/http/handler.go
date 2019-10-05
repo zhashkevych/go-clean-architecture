@@ -1,4 +1,4 @@
-package handler
+package http
 
 import (
 	"github.com/gin-gonic/gin"
@@ -15,10 +15,14 @@ func NewHandler(useCase bookmark.UseCase) *Handler {
 	}
 }
 
-func (h *Handler) SignUp(c *gin.Context) {
+func (h *Handler) Create(c *gin.Context) {
 
 }
 
-func (h *Handler) SignIn(c *gin.Context) {
+func (h *Handler) Get(c *gin.Context) {
+
+}
+
+func (h *Handler) Delete(c *gin.Context) {
 
 }

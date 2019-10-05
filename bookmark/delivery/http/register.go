@@ -3,11 +3,10 @@ package http
 import (
 	"github.com/gin-gonic/gin"
 	"github.com/zhashkevych/go-clean-architecture/bookmark"
-	"github.com/zhashkevych/go-clean-architecture/bookmark/delivery/http/handler"
 )
 
 func RegisterHTTPEndpoints(router *gin.RouterGroup, uc bookmark.UseCase) {
-	h := handler.NewHandler(uc)
+	h := NewHandler(uc)
 
 	noauth := router.Group("/")
 	{

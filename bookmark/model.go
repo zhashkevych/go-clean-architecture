@@ -1,4 +1,4 @@
-package model
+package bookmark
 
 type Bookmark struct {
 	ID          int64

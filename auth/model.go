@@ -1,4 +1,4 @@
-package model
+package auth
 
 type User struct {
 	ID       int64

@@ -2,6 +2,7 @@ package server
 
 import (
 	"github.com/gin-gonic/gin"
+	"github.com/zhashkevych/go-clean-architecture/auth/repository/localstorage"
 	"github.com/zhashkevych/go-clean-architecture/bookmark"
 	deliveryhttp "github.com/zhashkevych/go-clean-architecture/bookmark/delivery/http"
 	"github.com/zhashkevych/go-clean-architecture/bookmark/repository/localcache"
@@ -15,11 +16,11 @@ type App struct {
 }
 
 func NewApp(addr, port string) *App {
-	userRepo := localcache.NewUserLocalStorage()
+	userRepo := localstorage.NewUserLocalStorage()
 	bookmarkRepo := localcache.NewBookmarkLocalStorage()
 
 	return &App{
-		bookmarkUC: usecase.NewBookmarkUseCase(userRepo, bookmarkRepo),
+		bookmarkUC: usecase.NewBookmarkUseCase(bookmarkRepo),
 		httpAddr:   addr,
 		httpPort:   port,
 	}

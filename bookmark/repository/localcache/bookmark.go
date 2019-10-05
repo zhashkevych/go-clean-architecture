@@ -2,25 +2,25 @@ package localcache
 
 import (
 	"context"
-	"github.com/zhashkevych/go-clean-architecture/bookmark"
 	"sync"
 
-	"github.com/zhashkevych/go-clean-architecture/bookmark/model"
+	"github.com/zhashkevych/go-clean-architecture/auth"
+	"github.com/zhashkevych/go-clean-architecture/bookmark"
 )
 
 type BookmarkLocalStorage struct {
-	bookmarks map[int64]*model.Bookmark
+	bookmarks map[int64]*bookmark.Bookmark
 	mutex     *sync.Mutex
 }
 
 func NewBookmarkLocalStorage() *BookmarkLocalStorage {
 	return &BookmarkLocalStorage{
-		bookmarks: make(map[int64]*model.Bookmark),
+		bookmarks: make(map[int64]*bookmark.Bookmark),
 		mutex:     new(sync.Mutex),
 	}
 }
 
-func (s *BookmarkLocalStorage) CreateBookmark(ctx context.Context, user *model.User, bm *model.Bookmark) error {
+func (s *BookmarkLocalStorage) CreateBookmark(ctx context.Context, user *auth.User, bm *bookmark.Bookmark) error {
 	bm.UserID = user.ID
 
 	s.mutex.Lock()
@@ -30,8 +30,8 @@ func (s *BookmarkLocalStorage) CreateBookmark(ctx context.Context, user *model.U
 	return nil
 }
 
-func (s *BookmarkLocalStorage) GetBookmarks(ctx context.Context, user *model.User) ([]*model.Bookmark, error) {
-	bookmarks := make([]*model.Bookmark, 0)
+func (s *BookmarkLocalStorage) GetBookmarks(ctx context.Context, user *auth.User) ([]*bookmark.Bookmark, error) {
+	bookmarks := make([]*bookmark.Bookmark, 0)
 
 	s.mutex.Lock()
 	for _, bm := range s.bookmarks {
@@ -44,7 +44,7 @@ func (s *BookmarkLocalStorage) GetBookmarks(ctx context.Context, user *model.Use
 	return bookmarks, nil
 }
 
-func (s *BookmarkLocalStorage) GetBookmarkByID(ctx context.Context, user *model.User, id int64) (*model.Bookmark, error) {
+func (s *BookmarkLocalStorage) GetBookmarkByID(ctx context.Context, user *auth.User, id int64) (*bookmark.Bookmark, error) {
 	s.mutex.Lock()
 	defer s.mutex.Unlock()
 
@@ -56,7 +56,7 @@ func (s *BookmarkLocalStorage) GetBookmarkByID(ctx context.Context, user *model.
 	return nil, bookmark.ErrBookmarkNotFound
 }
 
-func (s *BookmarkLocalStorage) DeleteBookmark(ctx context.Context, user *model.User, id int64) error {
+func (s *BookmarkLocalStorage) DeleteBookmark(ctx context.Context, user *auth.User, id int64) error {
 	s.mutex.Lock()
 	defer s.mutex.Unlock()
 

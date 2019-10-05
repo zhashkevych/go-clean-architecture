@@ -3,18 +3,18 @@ package localcache
 import (
 	"context"
 	"github.com/stretchr/testify/assert"
+	"github.com/zhashkevych/go-clean-architecture/auth"
 	"github.com/zhashkevych/go-clean-architecture/bookmark"
-	"github.com/zhashkevych/go-clean-architecture/bookmark/model"
 	"testing"
 )
 
 func TestGetBookmarks(t *testing.T) {
-	user := &model.User{ID: 1}
+	user := &auth.User{ID: 1}
 
 	s := NewBookmarkLocalStorage()
 
 	for i := 0; i < 10; i++ {
-		bm := &model.Bookmark{
+		bm := &bookmark.Bookmark{
 			ID:     int64(i),
 			UserID: user.ID,
 		}
@@ -30,9 +30,9 @@ func TestGetBookmarks(t *testing.T) {
 }
 
 func TestGetBookmarkByID(t *testing.T) {
-	user := &model.User{ID: 1}
-	user2 := &model.User{ID: 2}
-	bm := &model.Bookmark{ID: 15, UserID: user.ID}
+	user := &auth.User{ID: 1}
+	user2 := &auth.User{ID: 2}
+	bm := &bookmark.Bookmark{ID: 15, UserID: user.ID}
 
 	s := NewBookmarkLocalStorage()
 
@@ -53,9 +53,9 @@ func TestGetBookmarkByID(t *testing.T) {
 }
 
 func TestDeleteBookmark(t *testing.T) {
-	user := &model.User{ID: 1}
-	user2 := &model.User{ID: 2}
-	bm := &model.Bookmark{ID: 15, UserID: user.ID}
+	user := &auth.User{ID: 1}
+	user2 := &auth.User{ID: 2}
+	bm := &bookmark.Bookmark{ID: 15, UserID: user.ID}
 
 	s := NewBookmarkLocalStorage()
 
