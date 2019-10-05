@@ -14,5 +14,5 @@ type BookmarkRepository interface {
 	CreateBookmark(ctx context.Context, todo *model.Bookmark) error
 	GetBookmarksByUserID(ctx context.Context, userID int64) ([]*model.Bookmark, error)
 	GetBookmarkByID(ctx context.Context, id int64) (*model.Bookmark, error)
-	DeleteBookmark(ctx context.Context, id int64) error
+	DeleteBookmark(ctx context.Context, user *model.User, id int64) error
 }
