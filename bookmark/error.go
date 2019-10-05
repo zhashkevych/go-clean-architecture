@@ -3,6 +3,6 @@ package bookmark
 import "errors"
 
 var (
-	ErrUserNotFound = errors.New("user not found")
-	ErrTodoNotFound = errors.New("bookmark not found")
+	ErrUserNotFound     = errors.New("user not found")
+	ErrBookmarkNotFound = errors.New("bookmark not found")
 )

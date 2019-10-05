@@ -27,13 +27,11 @@ func (b BookmarkUseCase) GetUser(ctx context.Context, id int64) (*model.User, er
 }
 
 func (b BookmarkUseCase) CreateBookmark(ctx context.Context, user *model.User, todo *model.Bookmark) error {
-	todo.UserID = user.ID
-
-	return b.bookmarkRepo.CreateBookmark(ctx, todo)
+	return b.bookmarkRepo.CreateBookmark(ctx, user, todo)
 }
 
 func (b BookmarkUseCase) GetBookmarks(ctx context.Context, user *model.User) ([]*model.Bookmark, error) {
-	return b.bookmarkRepo.GetBookmarksByUserID(ctx, user.ID)
+	return b.bookmarkRepo.GetBookmarks(ctx, user)
 }
 
 func (b BookmarkUseCase) GetBookmarkByID(ctx context.Context, user *model.User, id int64) (*model.Bookmark, error) {
