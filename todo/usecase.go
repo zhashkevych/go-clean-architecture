@@ -1,4 +1,4 @@
-package usecase
+package todo
 
 type UseCase interface {
 	RegisterUser()
