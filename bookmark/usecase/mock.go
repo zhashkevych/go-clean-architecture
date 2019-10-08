@@ -12,8 +12,8 @@ type BookmarkUseCaseMock struct {
 	mock.Mock
 }
 
-func (m BookmarkUseCaseMock) CreateBookmark(ctx context.Context, user *auth.User, todo *bookmark.Bookmark) error {
-	args := m.Called(user, todo)
+func (m BookmarkUseCaseMock) CreateBookmark(ctx context.Context, user *auth.User, url, title string) error {
+	args := m.Called(user, url, title)
 
 	return args.Error(0)
 }
@@ -22,12 +22,6 @@ func (m BookmarkUseCaseMock) GetBookmarks(ctx context.Context, user *auth.User) 
 	args := m.Called(user)
 
 	return args.Get(0).([]*bookmark.Bookmark), args.Error(1)
-}
-
-func (m BookmarkUseCaseMock) GetBookmarkByID(ctx context.Context, user *auth.User, id uuid.UUID) (*bookmark.Bookmark, error) {
-	args := m.Called(user, id)
-
-	return args.Get(0).(*bookmark.Bookmark), args.Error(1)
 }
 
 func (m BookmarkUseCaseMock) DeleteBookmark(ctx context.Context, user *auth.User, id uuid.UUID) error {

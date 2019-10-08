@@ -30,10 +30,6 @@ func (b BookmarkUseCase) GetBookmarks(ctx context.Context, user *auth.User) ([]*
 	return b.bookmarkRepo.GetBookmarks(ctx, user)
 }
 
-func (b BookmarkUseCase) GetBookmarkByID(ctx context.Context, user *auth.User, id uuid.UUID) (*bookmark.Bookmark, error) {
-	return b.GetBookmarkByID(ctx, user, id)
-}
-
 func (b BookmarkUseCase) DeleteBookmark(ctx context.Context, user *auth.User, id uuid.UUID) error {
 	return b.bookmarkRepo.DeleteBookmark(ctx, user, id)
 }
