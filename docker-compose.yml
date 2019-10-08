@@ -1,0 +1,28 @@
+version: '3.4'
+
+services:
+
+  server:
+    image: go-clean-architecture
+    container_name: "go-clean-architecture"
+    build:
+      context: .
+    command: ./app
+    ports:
+      - 8000:8000
+    depends_on:
+      - mongodb
+
+  mongodb:
+    image: mongo:latest
+    container_name: "mongodb"
+    environment:
+      - MONGO_DATA_DIR=/data/db
+      - MONGO_LOG_DIR=/dev/null
+      - MONGODB_USER="admin"
+      - MONGODB_PASS="password"
+    volumes:
+      - ./.data/db:/data/db
+    ports:
+      - 27017:27017
+    command: mongod --smallfiles --logpath=/dev/null # --quiet
