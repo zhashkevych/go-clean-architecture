@@ -45,18 +45,6 @@ func (s *BookmarkLocalStorage) GetBookmarks(ctx context.Context, user *auth.User
 	return bookmarks, nil
 }
 
-func (s *BookmarkLocalStorage) GetBookmarkByID(ctx context.Context, user *auth.User, id uuid.UUID) (*bookmark.Bookmark, error) {
-	s.mutex.Lock()
-	defer s.mutex.Unlock()
-
-	bm, ex := s.bookmarks[id]
-	if ex && bm.UserID == user.ID {
-		return bm, nil
-	}
-
-	return nil, bookmark.ErrBookmarkNotFound
-}
-
 func (s *BookmarkLocalStorage) DeleteBookmark(ctx context.Context, user *auth.User, id uuid.UUID) error {
 	s.mutex.Lock()
 	defer s.mutex.Unlock()
