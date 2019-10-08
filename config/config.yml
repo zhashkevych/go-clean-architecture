@@ -1,0 +1,8 @@
+port: 8000
+
+auth:
+  hash_salt: "hash_salt"
+  signing_key: "signing_key"
+
+mongo:
+  uri: "mongodb://mongodb:27017"

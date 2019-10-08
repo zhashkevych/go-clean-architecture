@@ -2,6 +2,8 @@ package server
 
 import (
 	"github.com/gin-gonic/gin"
+	"net/http"
+	"time"
 
 	"github.com/zhashkevych/go-clean-architecture/auth"
 	"github.com/zhashkevych/go-clean-architecture/bookmark"
@@ -14,43 +16,51 @@ import (
 	bmusecase "github.com/zhashkevych/go-clean-architecture/bookmark/usecase"
 )
 
-// TODO; use http.Client
 type App struct {
-	httpAddr string
-	httpPort string
+	httpServer *http.Server
 
 	bookmarkUC bookmark.UseCase
 	authUC     auth.UseCase
 }
 
-// TODO: inject hashSalt and secret
-func NewApp(addr, port string) *App {
+func NewApp(hashSalt, signingKey string) *App {
 	userRepo := authlocalcache.NewUserLocalStorage()
 	bookmarkRepo := bmlocalcache.NewBookmarkLocalStorage()
 
 	return &App{
 		bookmarkUC: bmusecase.NewBookmarkUseCase(bookmarkRepo),
-		authUC:     authusecase.NewAuthUseCase(userRepo, "hashSalt", []byte("secret")),
-		httpAddr:   addr,
-		httpPort:   port,
+		authUC:     authusecase.NewAuthUseCase(userRepo, hashSalt, []byte(signingKey)),
 	}
 }
 
-func (a *App) Run() error {
+func (a *App) Run(port string) error {
+	// Init gin handler
 	router := gin.Default()
 	router.Use(
 		gin.Recovery(),
 		gin.Logger(),
 	)
 
+	// Set up http handlers
+	// SignUp/SignIn endpoints
 	authhttp.RegisterHTTPEndpoints(router, a.authUC)
 
+	// API endpoints
 	authMiddleware := authhttp.NewAuthMiddleware(a.authUC)
 	api := router.Group("/api", authMiddleware)
 
 	bmhttp.RegisterHTTPEndpoints(api, a.bookmarkUC)
 
-	if err := router.Run(a.httpAddr + ":" + a.httpPort); err != nil {
+	// HTTP Server
+	a.httpServer = &http.Server{
+		Addr:           ":" + port,
+		Handler:        router,
+		ReadTimeout:    10 * time.Second,
+		WriteTimeout:   10 * time.Second,
+		MaxHeaderBytes: 1 << 20,
+	}
+
+	if err := a.httpServer.ListenAndServe(); err != nil {
 		return err
 	}
 
