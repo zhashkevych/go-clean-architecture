@@ -17,8 +17,13 @@ func NewBookmarkUseCase(bookmarkRepo bookmark.Repository) *BookmarkUseCase {
 	}
 }
 
-func (b BookmarkUseCase) CreateBookmark(ctx context.Context, user *auth.User, todo *bookmark.Bookmark) error {
-	return b.bookmarkRepo.CreateBookmark(ctx, user, todo)
+func (b BookmarkUseCase) CreateBookmark(ctx context.Context, user *auth.User, url, title string) error {
+	bm := &bookmark.Bookmark{
+		URL:   url,
+		Title: title,
+	}
+
+	return b.bookmarkRepo.CreateBookmark(ctx, user, bm)
 }
 
 func (b BookmarkUseCase) GetBookmarks(ctx context.Context, user *auth.User) ([]*bookmark.Bookmark, error) {

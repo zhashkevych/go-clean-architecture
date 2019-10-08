@@ -7,5 +7,4 @@ type Bookmark struct {
 	UserID      uuid.UUID
 	URL 		string
 	Title       string
-	Description string
 }
