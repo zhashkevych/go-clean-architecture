@@ -7,3 +7,5 @@ auth:
 mongo:
   uri: "mongodb://mongodb:27017"
   name: "testdb"
+  user_collection: "users"
+  bookmark_collection: "bookmarks"

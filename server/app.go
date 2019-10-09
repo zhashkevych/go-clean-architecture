@@ -1,8 +1,12 @@
 package server
 
 import (
+	"context"
 	"github.com/gin-gonic/gin"
 	"github.com/spf13/viper"
+	"go.mongodb.org/mongo-driver/mongo"
+	"go.mongodb.org/mongo-driver/mongo/options"
+	"log"
 	"net/http"
 	"time"
 
@@ -10,10 +14,10 @@ import (
 	"github.com/zhashkevych/go-clean-architecture/bookmark"
 
 	authhttp "github.com/zhashkevych/go-clean-architecture/auth/delivery/http"
-	authlocalcache "github.com/zhashkevych/go-clean-architecture/auth/repository/localstorage"
+	authmongo "github.com/zhashkevych/go-clean-architecture/auth/repository/mongo"
 	authusecase "github.com/zhashkevych/go-clean-architecture/auth/usecase"
 	bmhttp "github.com/zhashkevych/go-clean-architecture/bookmark/delivery/http"
-	bmlocalcache "github.com/zhashkevych/go-clean-architecture/bookmark/repository/localcache"
+	bmmongo "github.com/zhashkevych/go-clean-architecture/bookmark/repository/mongo"
 	bmusecase "github.com/zhashkevych/go-clean-architecture/bookmark/usecase"
 )
 
@@ -25,8 +29,10 @@ type App struct {
 }
 
 func NewApp() *App {
-	userRepo := authlocalcache.NewUserLocalStorage()
-	bookmarkRepo := bmlocalcache.NewBookmarkLocalStorage()
+	db := initDB()
+
+	userRepo := authmongo.NewUserRepository(db, viper.GetString("mongo.user_collection"))
+	bookmarkRepo := bmmongo.NewBookmarkRepository(db, viper.GetString("mongo.bookmark_collection"))
 
 	return &App{
 		bookmarkUC: bmusecase.NewBookmarkUseCase(bookmarkRepo),
@@ -70,4 +76,26 @@ func (a *App) Run(port string) error {
 	}
 
 	return nil
+}
+
+func initDB() *mongo.Database {
+	client, err := mongo.NewClient(options.Client().ApplyURI(viper.GetString("mongo.uri")))
+	if err != nil {
+		log.Fatalf("Error occured while establishing connection to mongoDB")
+	}
+
+	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+	defer cancel()
+
+	err = client.Connect(ctx)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	err = client.Ping(context.Background(), nil)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	return client.Database(viper.GetString("mongo.name"))
 }
