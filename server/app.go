@@ -2,6 +2,7 @@ package server
 
 import (
 	"github.com/gin-gonic/gin"
+	"github.com/spf13/viper"
 	"net/http"
 	"time"
 
@@ -23,13 +24,17 @@ type App struct {
 	authUC     auth.UseCase
 }
 
-func NewApp(hashSalt, signingKey string) *App {
+func NewApp() *App {
 	userRepo := authlocalcache.NewUserLocalStorage()
 	bookmarkRepo := bmlocalcache.NewBookmarkLocalStorage()
 
 	return &App{
 		bookmarkUC: bmusecase.NewBookmarkUseCase(bookmarkRepo),
-		authUC:     authusecase.NewAuthUseCase(userRepo, hashSalt, []byte(signingKey)),
+		authUC: authusecase.NewAuthUseCase(
+			userRepo,
+			viper.GetString("auth.hash_salt"),
+			[]byte(viper.GetString("auth.signing_key")),
+		),
 	}
 }
 
