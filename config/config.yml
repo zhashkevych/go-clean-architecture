@@ -6,3 +6,4 @@ auth:
 
 mongo:
   uri: "mongodb://mongodb:27017"
+  name: "testdb"

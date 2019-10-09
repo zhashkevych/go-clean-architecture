@@ -16,7 +16,8 @@ type auth struct {
 }
 
 type mongo struct {
-	URI string
+	URI  string
+	Name string
 }
 
 func (c *Config) Set() {
@@ -24,6 +25,7 @@ func (c *Config) Set() {
 	c.Auth.HashSalt = viper.GetString("auth.hash_salt")
 	c.Auth.SigningKey = viper.GetString("auth.signing_key")
 	c.Mongo.URI = viper.GetString("mongo.uri")
+	c.Mongo.Name = viper.GetString("mongo.name")
 }
 
 func Init() (*Config, error) {
