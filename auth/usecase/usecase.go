@@ -6,8 +6,6 @@ import (
 	"fmt"
 
 	"github.com/dgrijalva/jwt-go/v4"
-	"github.com/google/uuid"
-
 	"github.com/zhashkevych/go-clean-architecture/auth"
 )
 
@@ -36,7 +34,6 @@ func (a *AuthUseCase) SignUp(ctx context.Context, username, password string) err
 	pwd.Write([]byte(a.hashSalt))
 
 	user := &auth.User{
-		ID:       uuid.New(),
 		Username: username,
 		Password: fmt.Sprintf("%x", pwd.Sum(nil)),
 	}
