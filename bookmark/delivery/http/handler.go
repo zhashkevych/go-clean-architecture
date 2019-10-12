@@ -26,7 +26,7 @@ func NewHandler(useCase bookmark.UseCase) *Handler {
 
 type createInput struct {
 	URL   string `json:"url"`
-	Title string `json:"url"`
+	Title string `json:"title"`
 }
 
 func (h *Handler) Create(c *gin.Context) {

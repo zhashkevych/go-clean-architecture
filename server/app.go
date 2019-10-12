@@ -40,6 +40,7 @@ func NewApp() *App {
 			userRepo,
 			viper.GetString("auth.hash_salt"),
 			[]byte(viper.GetString("auth.signing_key")),
+			viper.GetDuration("auth.token_ttl"),
 		),
 	}
 }

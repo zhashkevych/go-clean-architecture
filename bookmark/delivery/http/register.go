@@ -12,7 +12,6 @@ func RegisterHTTPEndpoints(router *gin.RouterGroup, uc bookmark.UseCase) {
 	{
 		bookmarks.POST("", h.Create)
 		bookmarks.GET("", h.Get)
-		bookmarks.GET(":id", h.Get)
-		bookmarks.DELETE(":id", h.Delete)
+		bookmarks.DELETE("", h.Delete)
 	}
 }
