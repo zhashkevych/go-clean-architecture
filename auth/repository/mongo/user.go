@@ -4,8 +4,8 @@ import (
 	"context"
 	"github.com/zhashkevych/go-clean-architecture/auth"
 	"go.mongodb.org/mongo-driver/bson"
+	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
-	"go.mongodb.org/mongo-driver/x/mongo/driver/uuid"
 )
 
 type UserRepository struct {
@@ -24,7 +24,7 @@ func (r UserRepository) CreateUser(ctx context.Context, user *auth.User) error {
 		return err
 	}
 
-	user.ID = res.InsertedID.(uuid.UUID)
+	user.ID = res.InsertedID.(primitive.ObjectID)
 	return nil
 }
 

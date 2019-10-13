@@ -1,10 +1,12 @@
 package bookmark
 
-import "go.mongodb.org/mongo-driver/x/mongo/driver/uuid"
+import (
+	"go.mongodb.org/mongo-driver/bson/primitive"
+)
 
 type Bookmark struct {
-	ID     uuid.UUID `bson:"_id"`
-	UserID uuid.UUID `bson:"userId"`
-	URL    string    `bson:"url"`
-	Title  string    `bson:"title"`
+	ID     primitive.ObjectID `bson:"_id"`
+	UserID primitive.ObjectID `bson:"userId"`
+	URL    string             `bson:"url"`
+	Title  string             `bson:"title"`
 }

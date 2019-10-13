@@ -4,7 +4,7 @@ import (
 	"context"
 	"github.com/zhashkevych/go-clean-architecture/auth"
 	"github.com/zhashkevych/go-clean-architecture/bookmark"
-	"go.mongodb.org/mongo-driver/x/mongo/driver/uuid"
+	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
 type BookmarkUseCase struct {
@@ -30,6 +30,6 @@ func (b BookmarkUseCase) GetBookmarks(ctx context.Context, user *auth.User) ([]*
 	return b.bookmarkRepo.GetBookmarks(ctx, user)
 }
 
-func (b BookmarkUseCase) DeleteBookmark(ctx context.Context, user *auth.User, id uuid.UUID) error {
+func (b BookmarkUseCase) DeleteBookmark(ctx context.Context, user *auth.User, id primitive.ObjectID) error {
 	return b.bookmarkRepo.DeleteBookmark(ctx, user, id)
 }

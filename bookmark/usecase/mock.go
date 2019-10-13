@@ -2,10 +2,10 @@ package usecase
 
 import (
 	"context"
-	"github.com/google/uuid"
 	"github.com/stretchr/testify/mock"
 	"github.com/zhashkevych/go-clean-architecture/auth"
 	"github.com/zhashkevych/go-clean-architecture/bookmark"
+	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
 type BookmarkUseCaseMock struct {
@@ -24,7 +24,7 @@ func (m BookmarkUseCaseMock) GetBookmarks(ctx context.Context, user *auth.User) 
 	return args.Get(0).([]*bookmark.Bookmark), args.Error(1)
 }
 
-func (m BookmarkUseCaseMock) DeleteBookmark(ctx context.Context, user *auth.User, id uuid.UUID) error {
+func (m BookmarkUseCaseMock) DeleteBookmark(ctx context.Context, user *auth.User, id primitive.ObjectID) error {
 	args := m.Called(user, id)
 
 	return args.Error(0)

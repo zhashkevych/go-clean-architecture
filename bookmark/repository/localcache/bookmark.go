@@ -2,7 +2,7 @@ package localcache
 
 import (
 	"context"
-	"go.mongodb.org/mongo-driver/x/mongo/driver/uuid"
+	"go.mongodb.org/mongo-driver/bson/primitive"
 	"sync"
 
 	"github.com/zhashkevych/go-clean-architecture/auth"
@@ -10,13 +10,13 @@ import (
 )
 
 type BookmarkLocalStorage struct {
-	bookmarks map[uuid.UUID]*bookmark.Bookmark
+	bookmarks map[primitive.ObjectID]*bookmark.Bookmark
 	mutex     *sync.Mutex
 }
 
 func NewBookmarkLocalStorage() *BookmarkLocalStorage {
 	return &BookmarkLocalStorage{
-		bookmarks: make(map[uuid.UUID]*bookmark.Bookmark),
+		bookmarks: make(map[primitive.ObjectID]*bookmark.Bookmark),
 		mutex:     new(sync.Mutex),
 	}
 }
@@ -45,7 +45,7 @@ func (s *BookmarkLocalStorage) GetBookmarks(ctx context.Context, user *auth.User
 	return bookmarks, nil
 }
 
-func (s *BookmarkLocalStorage) DeleteBookmark(ctx context.Context, user *auth.User, id uuid.UUID) error {
+func (s *BookmarkLocalStorage) DeleteBookmark(ctx context.Context, user *auth.User, id primitive.ObjectID) error {
 	s.mutex.Lock()
 	defer s.mutex.Unlock()
 

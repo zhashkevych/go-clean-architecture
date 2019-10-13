@@ -1,9 +1,9 @@
 package auth
 
-import "go.mongodb.org/mongo-driver/x/mongo/driver/uuid"
+import "go.mongodb.org/mongo-driver/bson/primitive"
 
 type User struct {
-	ID       uuid.UUID `bson:"_id"`
-	Username string    `bson:"username"`
-	Password string    `bson:"password"`
+	ID       primitive.ObjectID `bson:"_id"`
+	Username string             `bson:"username"`
+	Password string             `bson:"password"`
 }

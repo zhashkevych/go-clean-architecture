@@ -5,8 +5,8 @@ import (
 	"github.com/zhashkevych/go-clean-architecture/auth"
 	"github.com/zhashkevych/go-clean-architecture/bookmark"
 	"go.mongodb.org/mongo-driver/bson"
+	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
-	"go.mongodb.org/mongo-driver/x/mongo/driver/uuid"
 )
 
 type BookmarkRepository struct {
@@ -27,7 +27,7 @@ func (r BookmarkRepository) CreateBookmark(ctx context.Context, user *auth.User,
 		return err
 	}
 
-	bm.ID = res.InsertedID.(uuid.UUID)
+	bm.ID = res.InsertedID.(primitive.ObjectID)
 	return nil
 }
 
@@ -59,7 +59,7 @@ func (r BookmarkRepository) GetBookmarks(ctx context.Context, user *auth.User) (
 	return out, nil
 }
 
-func (r BookmarkRepository) DeleteBookmark(ctx context.Context, user *auth.User, id uuid.UUID) error {
+func (r BookmarkRepository) DeleteBookmark(ctx context.Context, user *auth.User, id primitive.ObjectID) error {
 	_, err := r.db.DeleteOne(ctx, bson.M{"_id": id, "userId": user.ID})
 	return err
 }

@@ -6,11 +6,12 @@ import (
 	"github.com/stretchr/testify/assert"
 	"github.com/zhashkevych/go-clean-architecture/auth"
 	"github.com/zhashkevych/go-clean-architecture/bookmark"
+	"go.mongodb.org/mongo-driver/bson/primitive"
 	"testing"
 )
 
 func TestGetBookmarks(t *testing.T) {
-	id := uuid.New()
+	id := primitive.NewObjectID()
 	user := &auth.User{ID: id}
 
 	s := NewBookmarkLocalStorage()
@@ -32,8 +33,8 @@ func TestGetBookmarks(t *testing.T) {
 }
 
 func TestDeleteBookmark(t *testing.T) {
-	id1 := uuid.New()
-	id2 := uuid.New()
+	id1 := primitive.NewObjectID()
+	id2 := primitive.NewObjectID()
 
 	user1 := &auth.User{ID: id1}
 	user2 := &auth.User{ID: id2}

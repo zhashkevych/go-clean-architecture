@@ -5,13 +5,14 @@ import (
 	"github.com/google/uuid"
 	"github.com/stretchr/testify/assert"
 	"github.com/zhashkevych/go-clean-architecture/auth"
+	"go.mongodb.org/mongo-driver/bson/primitive"
 	"testing"
 )
 
 func TestGetUser(t *testing.T) {
 	s := NewUserLocalStorage()
 
-	id1 := uuid.New()
+	id1 := primitive.NewObjectID()
 
 	user := &auth.User{
 		ID:       id1,
