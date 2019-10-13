@@ -5,8 +5,7 @@ services:
   server:
     image: go-clean-architecture
     container_name: "go-clean-architecture"
-    build:
-      context: .
+    build: ./
     command: ./app
     ports:
       - 8000:8000
@@ -19,8 +18,7 @@ services:
     environment:
       - MONGO_DATA_DIR=/data/db
       - MONGO_LOG_DIR=/dev/null
-      - MONGODB_USER="admin"
-      - MONGODB_PASS="password"
+      - MONGODB_DATABASE=testdb
     volumes:
       - ./.data/db:/data/db
     ports:

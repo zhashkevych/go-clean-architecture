@@ -2,10 +2,10 @@ package mongo
 
 import (
 	"context"
-	"github.com/google/uuid"
 	"github.com/zhashkevych/go-clean-architecture/auth"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
+	"go.mongodb.org/mongo-driver/x/mongo/driver/uuid"
 )
 
 type UserRepository struct {

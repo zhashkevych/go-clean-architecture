@@ -8,6 +8,8 @@ import (
 	"go.mongodb.org/mongo-driver/mongo/options"
 	"log"
 	"net/http"
+	"os"
+	"os/signal"
 	"time"
 
 	"github.com/zhashkevych/go-clean-architecture/auth"
@@ -72,11 +74,21 @@ func (a *App) Run(port string) error {
 		MaxHeaderBytes: 1 << 20,
 	}
 
-	if err := a.httpServer.ListenAndServe(); err != nil {
-		return err
-	}
+	go func() {
+		if err := a.httpServer.ListenAndServe(); err != nil {
+			log.Fatalf("Failed to listen and serve: %+v", err)
+		}
+	}()
 
-	return nil
+	quit := make(chan os.Signal, 1)
+	signal.Notify(quit, os.Interrupt, os.Interrupt)
+
+	<-quit
+
+	ctx, shutdown := context.WithTimeout(context.Background(), 5*time.Second)
+	defer shutdown()
+
+	return a.httpServer.Shutdown(ctx)
 }
 
 func initDB() *mongo.Database {

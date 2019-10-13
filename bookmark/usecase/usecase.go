@@ -2,9 +2,9 @@ package usecase
 
 import (
 	"context"
-	"github.com/google/uuid"
 	"github.com/zhashkevych/go-clean-architecture/auth"
 	"github.com/zhashkevych/go-clean-architecture/bookmark"
+	"go.mongodb.org/mongo-driver/x/mongo/driver/uuid"
 )
 
 type BookmarkUseCase struct {

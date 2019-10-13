@@ -2,8 +2,8 @@ package localstorage
 
 import (
 	"context"
-	"github.com/google/uuid"
 	"github.com/zhashkevych/go-clean-architecture/auth"
+	"go.mongodb.org/mongo-driver/x/mongo/driver/uuid"
 	"sync"
 )
 

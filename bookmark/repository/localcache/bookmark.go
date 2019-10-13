@@ -2,7 +2,7 @@ package localcache
 
 import (
 	"context"
-	"github.com/google/uuid"
+	"go.mongodb.org/mongo-driver/x/mongo/driver/uuid"
 	"sync"
 
 	"github.com/zhashkevych/go-clean-architecture/auth"

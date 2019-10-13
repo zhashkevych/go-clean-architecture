@@ -1,6 +1,6 @@
 package auth
 
-import "github.com/google/uuid"
+import "go.mongodb.org/mongo-driver/x/mongo/driver/uuid"
 
 type User struct {
 	ID       uuid.UUID `bson:"_id"`
