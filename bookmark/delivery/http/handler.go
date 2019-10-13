@@ -4,14 +4,13 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/zhashkevych/go-clean-architecture/auth"
 	"github.com/zhashkevych/go-clean-architecture/bookmark"
-	"go.mongodb.org/mongo-driver/bson/primitive"
 	"net/http"
 )
 
 type Bookmark struct {
-	ID    primitive.ObjectID `json:"id"`
-	URL   string             `json:"url"`
-	Title string             `json:"url"`
+	ID    string `json:"id"`
+	URL   string `json:"url"`
+	Title string `json:"title"`
 }
 
 type Handler struct {
@@ -65,7 +64,7 @@ func (h *Handler) Get(c *gin.Context) {
 }
 
 type deleteInput struct {
-	ID primitive.ObjectID `json:"id"`
+	ID string `json:"id"`
 }
 
 func (h *Handler) Delete(c *gin.Context) {

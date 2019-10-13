@@ -8,6 +8,12 @@ import (
 	"go.mongodb.org/mongo-driver/mongo"
 )
 
+type User struct {
+	ID       primitive.ObjectID `bson:"_id,omitempty"`
+	Username string             `bson:"username"`
+	Password string             `bson:"password"`
+}
+
 type UserRepository struct {
 	db *mongo.Collection
 }
@@ -19,17 +25,18 @@ func NewUserRepository(db *mongo.Database, collection string) *UserRepository {
 }
 
 func (r UserRepository) CreateUser(ctx context.Context, user *auth.User) error {
-	res, err := r.db.InsertOne(ctx, user)
+	model := toModel(user)
+	res, err := r.db.InsertOne(ctx, model)
 	if err != nil {
 		return err
 	}
 
-	user.ID = res.InsertedID.(primitive.ObjectID)
+	user.ID = res.InsertedID.(primitive.ObjectID).Hex()
 	return nil
 }
 
 func (r UserRepository) GetUser(ctx context.Context, username, password string) (*auth.User, error) {
-	user := new(auth.User)
+	user := new(User)
 	err := r.db.FindOne(ctx, bson.M{
 		"username": username,
 		"password": password,
@@ -39,5 +46,20 @@ func (r UserRepository) GetUser(ctx context.Context, username, password string) 
 		return nil, err
 	}
 
-	return user, nil
+	return toAuthUser(user), nil
+}
+
+func toModel(u *auth.User) *User {
+	return &User{
+		Username: u.Username,
+		Password: u.Password,
+	}
+}
+
+func toAuthUser(u *User) *auth.User {
+	return &auth.User{
+		ID:       u.ID.Hex(),
+		Username: u.Username,
+		Password: u.Password,
+	}
 }

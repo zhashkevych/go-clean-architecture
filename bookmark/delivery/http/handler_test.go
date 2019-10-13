@@ -4,7 +4,6 @@ import (
 	"bytes"
 	"encoding/json"
 	"github.com/gin-gonic/gin"
-	"github.com/google/uuid"
 	"github.com/stretchr/testify/assert"
 	"github.com/zhashkevych/go-clean-architecture/auth"
 	"github.com/zhashkevych/go-clean-architecture/bookmark"
@@ -64,7 +63,7 @@ func TestGet(t *testing.T) {
 	bms := make([]*bookmark.Bookmark, 5)
 	for i := 0; i < 5; i++ {
 		bms[i] = &bookmark.Bookmark{
-			ID:    uuid.New(),
+			ID:    "id",
 			URL:   "url",
 			Title: "title",
 		}
@@ -101,7 +100,7 @@ func TestDelete(t *testing.T) {
 	RegisterHTTPEndpoints(group, uc)
 
 	inp := &deleteInput{
-		ID: uuid.New(),
+		ID: "id",
 	}
 
 	body, err := json.Marshal(inp)

@@ -5,7 +5,6 @@ import (
 	"github.com/stretchr/testify/mock"
 	"github.com/zhashkevych/go-clean-architecture/auth"
 	"github.com/zhashkevych/go-clean-architecture/bookmark"
-	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
 type BookmarkStorageMock struct {
@@ -24,13 +23,7 @@ func (s *BookmarkStorageMock) GetBookmarks(ctx context.Context, user *auth.User)
 	return args.Get(0).([]*bookmark.Bookmark), args.Error(1)
 }
 
-func (s *BookmarkStorageMock) GetBookmarkByID(ctx context.Context, user *auth.User, id primitive.ObjectID) (*bookmark.Bookmark, error) {
-	args := s.Called(user, id)
-
-	return args.Get(0).(*bookmark.Bookmark), args.Error(1)
-}
-
-func (s *BookmarkStorageMock) DeleteBookmark(ctx context.Context, user *auth.User, id primitive.ObjectID) error {
+func (s *BookmarkStorageMock) DeleteBookmark(ctx context.Context, user *auth.User, id string) error {
 	args := s.Called(user, id)
 
 	return args.Error(0)

@@ -2,23 +2,22 @@ package localcache
 
 import (
 	"context"
-	"github.com/google/uuid"
+	"fmt"
 	"github.com/stretchr/testify/assert"
 	"github.com/zhashkevych/go-clean-architecture/auth"
 	"github.com/zhashkevych/go-clean-architecture/bookmark"
-	"go.mongodb.org/mongo-driver/bson/primitive"
 	"testing"
 )
 
 func TestGetBookmarks(t *testing.T) {
-	id := primitive.NewObjectID()
+	id := "id"
 	user := &auth.User{ID: id}
 
 	s := NewBookmarkLocalStorage()
 
 	for i := 0; i < 10; i++ {
 		bm := &bookmark.Bookmark{
-			ID:     id,
+			ID:     fmt.Sprintf("id%d", i),
 			UserID: user.ID,
 		}
 
@@ -33,13 +32,13 @@ func TestGetBookmarks(t *testing.T) {
 }
 
 func TestDeleteBookmark(t *testing.T) {
-	id1 := primitive.NewObjectID()
-	id2 := primitive.NewObjectID()
+	id1 := "id1"
+	id2 := "id2"
 
 	user1 := &auth.User{ID: id1}
 	user2 := &auth.User{ID: id2}
 
-	bmID := uuid.New()
+	bmID := "bmID"
 	bm := &bookmark.Bookmark{ID: bmID, UserID: user1.ID}
 
 	s := NewBookmarkLocalStorage()

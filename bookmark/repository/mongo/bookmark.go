@@ -9,6 +9,13 @@ import (
 	"go.mongodb.org/mongo-driver/mongo"
 )
 
+type Bookmark struct {
+	ID     primitive.ObjectID `bson:"_id,omitempty"`
+	UserID primitive.ObjectID `bson:"userId"`
+	URL    string             `bson:"url"`
+	Title  string             `bson:"title"`
+}
+
 type BookmarkRepository struct {
 	db *mongo.Collection
 }
@@ -22,18 +29,21 @@ func NewBookmarkRepository(db *mongo.Database, collection string) *BookmarkRepos
 func (r BookmarkRepository) CreateBookmark(ctx context.Context, user *auth.User, bm *bookmark.Bookmark) error {
 	bm.UserID = user.ID
 
-	res, err := r.db.InsertOne(ctx, bm)
+	model := toModel(bm)
+
+	res, err := r.db.InsertOne(ctx, model)
 	if err != nil {
 		return err
 	}
 
-	bm.ID = res.InsertedID.(primitive.ObjectID)
+	bm.ID = res.InsertedID.(primitive.ObjectID).Hex()
 	return nil
 }
 
 func (r BookmarkRepository) GetBookmarks(ctx context.Context, user *auth.User) ([]*bookmark.Bookmark, error) {
+	uid, _ := primitive.ObjectIDFromHex(user.ID)
 	cur, err := r.db.Find(ctx, bson.M{
-		"userId": user.ID,
+		"userId": uid,
 	})
 	defer cur.Close(ctx)
 
@@ -41,10 +51,10 @@ func (r BookmarkRepository) GetBookmarks(ctx context.Context, user *auth.User) (
 		return nil, err
 	}
 
-	out := make([]*bookmark.Bookmark, 0)
+	out := make([]*Bookmark, 0)
 
 	for cur.Next(ctx) {
-		user := new(bookmark.Bookmark)
+		user := new(Bookmark)
 		err := cur.Decode(user)
 		if err != nil {
 			return nil, err
@@ -56,10 +66,42 @@ func (r BookmarkRepository) GetBookmarks(ctx context.Context, user *auth.User) (
 		return nil, err
 	}
 
-	return out, nil
+	return toBookmarks(out), nil
 }
 
-func (r BookmarkRepository) DeleteBookmark(ctx context.Context, user *auth.User, id primitive.ObjectID) error {
-	_, err := r.db.DeleteOne(ctx, bson.M{"_id": id, "userId": user.ID})
+func (r BookmarkRepository) DeleteBookmark(ctx context.Context, user *auth.User, id string) error {
+	objID, _ := primitive.ObjectIDFromHex(id)
+	uID, _ := primitive.ObjectIDFromHex(user.ID)
+
+	_, err := r.db.DeleteOne(ctx, bson.M{"_id": objID, "userId": uID})
 	return err
+}
+
+func toModel(b *bookmark.Bookmark) *Bookmark {
+	uid, _ := primitive.ObjectIDFromHex(b.UserID)
+
+	return &Bookmark{
+		UserID: uid,
+		URL:    b.URL,
+		Title:  b.Title,
+	}
+}
+
+func toBookmark(b *Bookmark) *bookmark.Bookmark {
+	return &bookmark.Bookmark{
+		ID:     b.ID.Hex(),
+		UserID: b.UserID.Hex(),
+		URL:    b.URL,
+		Title:  b.Title,
+	}
+}
+
+func toBookmarks(bs []*Bookmark) []*bookmark.Bookmark {
+	out := make([]*bookmark.Bookmark, len(bs))
+
+	for i, b := range bs {
+		out[i] = toBookmark(b)
+	}
+
+	return out
 }

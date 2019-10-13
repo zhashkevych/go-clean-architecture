@@ -3,18 +3,17 @@ package localstorage
 import (
 	"context"
 	"github.com/zhashkevych/go-clean-architecture/auth"
-	"go.mongodb.org/mongo-driver/bson/primitive"
 	"sync"
 )
 
 type UserLocalStorage struct {
-	users map[primitive.ObjectID]*auth.User
+	users map[string]*auth.User
 	mutex *sync.Mutex
 }
 
 func NewUserLocalStorage() *UserLocalStorage {
 	return &UserLocalStorage{
-		users: make(map[primitive.ObjectID]*auth.User),
+		users: make(map[string]*auth.User),
 		mutex: new(sync.Mutex),
 	}
 }
