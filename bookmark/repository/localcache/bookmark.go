@@ -2,25 +2,25 @@ package localcache
 
 import (
 	"context"
+	"github.com/zhashkevych/go-clean-architecture/models"
 	"sync"
 
-	"github.com/zhashkevych/go-clean-architecture/auth"
 	"github.com/zhashkevych/go-clean-architecture/bookmark"
 )
 
 type BookmarkLocalStorage struct {
-	bookmarks map[string]*bookmark.Bookmark
+	bookmarks map[string]*models.Bookmark
 	mutex     *sync.Mutex
 }
 
 func NewBookmarkLocalStorage() *BookmarkLocalStorage {
 	return &BookmarkLocalStorage{
-		bookmarks: make(map[string]*bookmark.Bookmark),
+		bookmarks: make(map[string]*models.Bookmark),
 		mutex:     new(sync.Mutex),
 	}
 }
 
-func (s *BookmarkLocalStorage) CreateBookmark(ctx context.Context, user *auth.User, bm *bookmark.Bookmark) error {
+func (s *BookmarkLocalStorage) CreateBookmark(ctx context.Context, user *models.User, bm *models.Bookmark) error {
 	bm.UserID = user.ID
 
 	s.mutex.Lock()
@@ -30,8 +30,8 @@ func (s *BookmarkLocalStorage) CreateBookmark(ctx context.Context, user *auth.Us
 	return nil
 }
 
-func (s *BookmarkLocalStorage) GetBookmarks(ctx context.Context, user *auth.User) ([]*bookmark.Bookmark, error) {
-	bookmarks := make([]*bookmark.Bookmark, 0)
+func (s *BookmarkLocalStorage) GetBookmarks(ctx context.Context, user *models.User) ([]*models.Bookmark, error) {
+	bookmarks := make([]*models.Bookmark, 0)
 
 	s.mutex.Lock()
 	for _, bm := range s.bookmarks {
@@ -44,7 +44,7 @@ func (s *BookmarkLocalStorage) GetBookmarks(ctx context.Context, user *auth.User
 	return bookmarks, nil
 }
 
-func (s *BookmarkLocalStorage) DeleteBookmark(ctx context.Context, user *auth.User, id string) error {
+func (s *BookmarkLocalStorage) DeleteBookmark(ctx context.Context, user *models.User, id string) error {
 	s.mutex.Lock()
 	defer s.mutex.Unlock()
 

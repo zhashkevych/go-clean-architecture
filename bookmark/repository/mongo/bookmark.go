@@ -2,8 +2,7 @@ package mongo
 
 import (
 	"context"
-	"github.com/zhashkevych/go-clean-architecture/auth"
-	"github.com/zhashkevych/go-clean-architecture/bookmark"
+	"github.com/zhashkevych/go-clean-architecture/models"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
@@ -26,7 +25,7 @@ func NewBookmarkRepository(db *mongo.Database, collection string) *BookmarkRepos
 	}
 }
 
-func (r BookmarkRepository) CreateBookmark(ctx context.Context, user *auth.User, bm *bookmark.Bookmark) error {
+func (r BookmarkRepository) CreateBookmark(ctx context.Context, user *models.User, bm *models.Bookmark) error {
 	bm.UserID = user.ID
 
 	model := toModel(bm)
@@ -40,7 +39,7 @@ func (r BookmarkRepository) CreateBookmark(ctx context.Context, user *auth.User,
 	return nil
 }
 
-func (r BookmarkRepository) GetBookmarks(ctx context.Context, user *auth.User) ([]*bookmark.Bookmark, error) {
+func (r BookmarkRepository) GetBookmarks(ctx context.Context, user *models.User) ([]*models.Bookmark, error) {
 	uid, _ := primitive.ObjectIDFromHex(user.ID)
 	cur, err := r.db.Find(ctx, bson.M{
 		"userId": uid,
@@ -69,7 +68,7 @@ func (r BookmarkRepository) GetBookmarks(ctx context.Context, user *auth.User) (
 	return toBookmarks(out), nil
 }
 
-func (r BookmarkRepository) DeleteBookmark(ctx context.Context, user *auth.User, id string) error {
+func (r BookmarkRepository) DeleteBookmark(ctx context.Context, user *models.User, id string) error {
 	objID, _ := primitive.ObjectIDFromHex(id)
 	uID, _ := primitive.ObjectIDFromHex(user.ID)
 
@@ -77,7 +76,7 @@ func (r BookmarkRepository) DeleteBookmark(ctx context.Context, user *auth.User,
 	return err
 }
 
-func toModel(b *bookmark.Bookmark) *Bookmark {
+func toModel(b *models.Bookmark) *Bookmark {
 	uid, _ := primitive.ObjectIDFromHex(b.UserID)
 
 	return &Bookmark{
@@ -87,8 +86,8 @@ func toModel(b *bookmark.Bookmark) *Bookmark {
 	}
 }
 
-func toBookmark(b *Bookmark) *bookmark.Bookmark {
-	return &bookmark.Bookmark{
+func toBookmark(b *Bookmark) *models.Bookmark {
+	return &models.Bookmark{
 		ID:     b.ID.Hex(),
 		UserID: b.UserID.Hex(),
 		URL:    b.URL,
@@ -96,8 +95,8 @@ func toBookmark(b *Bookmark) *bookmark.Bookmark {
 	}
 }
 
-func toBookmarks(bs []*Bookmark) []*bookmark.Bookmark {
-	out := make([]*bookmark.Bookmark, len(bs))
+func toBookmarks(bs []*Bookmark) []*models.Bookmark {
+	out := make([]*models.Bookmark, len(bs))
 
 	for i, b := range bs {
 		out[i] = toBookmark(b)

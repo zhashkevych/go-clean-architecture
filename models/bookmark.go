@@ -1,4 +1,4 @@
-package bookmark
+package models
 
 type Bookmark struct {
 	ID     string

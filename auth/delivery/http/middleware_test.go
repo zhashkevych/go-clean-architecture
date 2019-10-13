@@ -5,6 +5,7 @@ import (
 	"github.com/stretchr/testify/assert"
 	"github.com/zhashkevych/go-clean-architecture/auth"
 	"github.com/zhashkevych/go-clean-architecture/auth/usecase"
+	"github.com/zhashkevych/go-clean-architecture/models"
 	"net/http"
 	"net/http/httptest"
 	"testing"
@@ -34,7 +35,7 @@ func TestAuthMiddleware(t *testing.T) {
 
 	// Bearer Auth Header with no token request
 	w = httptest.NewRecorder()
-	uc.On("ParseToken", "").Return(&auth.User{}, auth.ErrInvalidAccessToken)
+	uc.On("ParseToken", "").Return(&models.User{}, auth.ErrInvalidAccessToken)
 
 	req.Header.Set("Authorization", "Bearer ")
 	r.ServeHTTP(w, req)
@@ -42,7 +43,7 @@ func TestAuthMiddleware(t *testing.T) {
 
 	// Valid Auth Header
 	w = httptest.NewRecorder()
-	uc.On("ParseToken", "token").Return(&auth.User{}, nil)
+	uc.On("ParseToken", "token").Return(&models.User{}, nil)
 
 	req.Header.Set("Authorization", "Bearer token")
 	r.ServeHTTP(w, req)

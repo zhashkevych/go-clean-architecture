@@ -6,15 +6,15 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/stretchr/testify/assert"
 	"github.com/zhashkevych/go-clean-architecture/auth"
-	"github.com/zhashkevych/go-clean-architecture/bookmark"
 	"github.com/zhashkevych/go-clean-architecture/bookmark/usecase"
+	"github.com/zhashkevych/go-clean-architecture/models"
 	"net/http"
 	"net/http/httptest"
 	"testing"
 )
 
 func TestCreate(t *testing.T) {
-	testUser := &auth.User{
+	testUser := &models.User{
 		Username: "testuser",
 		Password: "testpass",
 	}
@@ -46,7 +46,7 @@ func TestCreate(t *testing.T) {
 }
 
 func TestGet(t *testing.T) {
-	testUser := &auth.User{
+	testUser := &models.User{
 		Username: "testuser",
 		Password: "testpass",
 	}
@@ -60,9 +60,9 @@ func TestGet(t *testing.T) {
 
 	RegisterHTTPEndpoints(group, uc)
 
-	bms := make([]*bookmark.Bookmark, 5)
+	bms := make([]*models.Bookmark, 5)
 	for i := 0; i < 5; i++ {
-		bms[i] = &bookmark.Bookmark{
+		bms[i] = &models.Bookmark{
 			ID:    "id",
 			URL:   "url",
 			Title: "title",
@@ -85,7 +85,7 @@ func TestGet(t *testing.T) {
 }
 
 func TestDelete(t *testing.T) {
-	testUser := &auth.User{
+	testUser := &models.User{
 		Username: "testuser",
 		Password: "testpass",
 	}

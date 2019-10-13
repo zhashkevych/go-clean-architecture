@@ -16,7 +16,7 @@ REST API with custom JWT-based authentication system. Core functionality is abou
 #### Structure:
 4 Domain layers:
 
-- Models layer (Each model is defined inside module package)
+- Models layer
 - Repository layer
 - UseCase layer
 - Delivery layer

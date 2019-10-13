@@ -4,6 +4,7 @@ import (
 	"context"
 	"crypto/sha1"
 	"fmt"
+	"github.com/zhashkevych/go-clean-architecture/models"
 	"time"
 
 	"github.com/dgrijalva/jwt-go/v4"
@@ -12,7 +13,7 @@ import (
 
 type AuthClaims struct {
 	jwt.StandardClaims
-	User *auth.User `json:"user"`
+	User *models.User `json:"user"`
 }
 
 type AuthUseCase struct {
@@ -40,7 +41,7 @@ func (a *AuthUseCase) SignUp(ctx context.Context, username, password string) err
 	pwd.Write([]byte(password))
 	pwd.Write([]byte(a.hashSalt))
 
-	user := &auth.User{
+	user := &models.User{
 		Username: username,
 		Password: fmt.Sprintf("%x", pwd.Sum(nil)),
 	}
@@ -71,7 +72,7 @@ func (a *AuthUseCase) SignIn(ctx context.Context, username, password string) (st
 	return token.SignedString(a.signingKey)
 }
 
-func (a *AuthUseCase) ParseToken(ctx context.Context, accessToken string) (*auth.User, error) {
+func (a *AuthUseCase) ParseToken(ctx context.Context, accessToken string) (*models.User, error) {
 	token, err := jwt.ParseWithClaims(accessToken, &AuthClaims{}, func(token *jwt.Token) (interface{}, error) {
 		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
 			return nil, fmt.Errorf("Unexpected signing method: %v", token.Header["alg"])

@@ -2,7 +2,7 @@ package mongo
 
 import (
 	"context"
-	"github.com/zhashkevych/go-clean-architecture/auth"
+	"github.com/zhashkevych/go-clean-architecture/models"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
@@ -24,7 +24,7 @@ func NewUserRepository(db *mongo.Database, collection string) *UserRepository {
 	}
 }
 
-func (r UserRepository) CreateUser(ctx context.Context, user *auth.User) error {
+func (r UserRepository) CreateUser(ctx context.Context, user *models.User) error {
 	model := toModel(user)
 	res, err := r.db.InsertOne(ctx, model)
 	if err != nil {
@@ -35,7 +35,7 @@ func (r UserRepository) CreateUser(ctx context.Context, user *auth.User) error {
 	return nil
 }
 
-func (r UserRepository) GetUser(ctx context.Context, username, password string) (*auth.User, error) {
+func (r UserRepository) GetUser(ctx context.Context, username, password string) (*models.User, error) {
 	user := new(User)
 	err := r.db.FindOne(ctx, bson.M{
 		"username": username,
@@ -49,15 +49,15 @@ func (r UserRepository) GetUser(ctx context.Context, username, password string) 
 	return toAuthUser(user), nil
 }
 
-func toModel(u *auth.User) *User {
+func toModel(u *models.User) *User {
 	return &User{
 		Username: u.Username,
 		Password: u.Password,
 	}
 }
 
-func toAuthUser(u *User) *auth.User {
-	return &auth.User{
+func toAuthUser(u *User) *models.User {
+	return &models.User{
 		ID:       u.ID.Hex(),
 		Username: u.Username,
 		Password: u.Password,

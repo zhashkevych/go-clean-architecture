@@ -4,6 +4,7 @@ import (
 	"context"
 	"github.com/stretchr/testify/assert"
 	"github.com/zhashkevych/go-clean-architecture/auth"
+	"github.com/zhashkevych/go-clean-architecture/models"
 	"testing"
 )
 
@@ -12,7 +13,7 @@ func TestGetUser(t *testing.T) {
 
 	id1 := "id"
 
-	user := &auth.User{
+	user := &models.User{
 		ID:       id1,
 		Username: "user",
 		Password: "password",

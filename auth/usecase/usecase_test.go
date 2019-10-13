@@ -3,8 +3,8 @@ package usecase
 import (
 	"context"
 	"github.com/stretchr/testify/assert"
-	"github.com/zhashkevych/go-clean-architecture/auth"
 	"github.com/zhashkevych/go-clean-architecture/auth/repository/mock"
+	"github.com/zhashkevych/go-clean-architecture/models"
 	"testing"
 )
 
@@ -19,7 +19,7 @@ func TestAuthFlow(t *testing.T) {
 
 		ctx = context.Background()
 
-		user = &auth.User{
+		user = &models.User{
 			Username: username,
 			Password: "11f5639f22525155cb0b43573ee4212838c78d87", // sha1 of pass+salt
 		}
