@@ -25,7 +25,7 @@ func NewUserRepository(db *mongo.Database, collection string) *UserRepository {
 }
 
 func (r UserRepository) CreateUser(ctx context.Context, user *models.User) error {
-	model := toModel(user)
+	model := toMongoUser(user)
 	res, err := r.db.InsertOne(ctx, model)
 	if err != nil {
 		return err
@@ -46,17 +46,17 @@ func (r UserRepository) GetUser(ctx context.Context, username, password string) 
 		return nil, err
 	}
 
-	return toAuthUser(user), nil
+	return toModel(user), nil
 }
 
-func toModel(u *models.User) *User {
+func toMongoUser(u *models.User) *User {
 	return &User{
 		Username: u.Username,
 		Password: u.Password,
 	}
 }
 
-func toAuthUser(u *User) *models.User {
+func toModel(u *User) *models.User {
 	return &models.User{
 		ID:       u.ID.Hex(),
 		Username: u.Username,
